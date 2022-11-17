@@ -1,20 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include<time.h>
+#include <time.h>
 
-double uniform(double a, double b){
+double uniform(){
+    //double a = m-3*sig;
+    //double b = m+3*sig;
+    //double num = a+((b-a)*(double)rand())/(double)RAND_MAX;
     double num = (double)rand()/(double)RAND_MAX;
-    return a+(b-a)*num;
+    printf("%f\n",num);
+    return num;
+}
+
+double convert(double m, double sig){
+    //printf("%f\n",uniform()*sqrtf(sig)+m);
+    //printf("%f\n",fabs((uniform()-m)/sqrtf(sig)));
+    return uniform()*sqrt(sig)+m;
+    //return (uniform()-m)/sqrtf(sig);
 }
 
 /* generate a random value weighted within the normal (gaussian) distribution */
 double gauss(double m, double sig){
-    //double u = (double)random() / RAND_MAX;
-    //double v = (double)random() / RAND_MAX;
-    double u = uniform(m,sig);
-    double v = uniform(m,sig);
-    double z = sqrt(-2 * log(u)) * cos(2 * M_PI * v);
+    double u = convert(m,sig);
+    double v = convert(m,sig);
+    //printf("%f %f\n",u,v);
+    double z = -2 * log(u) * cos(2 * M_PI * v);
+    //printf("%f\n",-2 * log(u));
     return z;
 }
 
