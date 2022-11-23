@@ -3,36 +3,10 @@
 #include <math.h>
 #include <time.h>
 
-double uniform(){
-    //double a = m-3*sig;
-    //double b = m+3*sig;
-    //double num = a+((b-a)*(double)rand())/(double)RAND_MAX;
-    double num = (double)rand()/(double)RAND_MAX;
-    printf("%f\n",num);
-    return num;
-}
-
-double convert(double m, double sig){
-    //printf("%f\n",uniform()*sqrtf(sig)+m);
-    //printf("%f\n",fabs((uniform()-m)/sqrtf(sig)));
-    return uniform()*sqrt(sig)+m;
-    //return (uniform()-m)/sqrtf(sig);
-}
-
-/* generate a random value weighted within the normal (gaussian) distribution */
-double gauss(double m, double sig){
-    double u = convert(m,sig);
-    double v = convert(m,sig);
-    //printf("%f %f\n",u,v);
-    double z = -2 * log(u) * cos(2 * M_PI * v);
-    //printf("%f\n",-2 * log(u));
-    return z;
-}
-
 void histogram(int N, double x[N], double xmin, double xmax, int nbin){
     int i,bin;
     FILE *f;
-    f=fopen("normal.txt","w");
+    f=fopen("brownian.txt","w");
     double hist[nbin];
     double dx = (xmax-xmin)/nbin;
     // initialisation de l'histogramme a 0
@@ -51,13 +25,92 @@ void histogram(int N, double x[N], double xmin, double xmax, int nbin){
     fclose(f);
 }
 
-int main(void) {
-    int N = pow(10,6);
-    srand(time(NULL));
+double uniform(){
+    double num = (double)rand()/(double)RAND_MAX;
+    return num;
+}
+
+/* generate a random value weighted within the normal (gaussian) distribution */
+double gauss(){
+    double u = uniform();
+    double v = uniform();
+    double x = sqrtf(-2 * log(u)) * cos(2 * M_PI * v);
+    return x;
+}
+
+double convert(double m, double sig){
+    return gauss()*sqrtf(sig)+m;
+}
+
+double* brownian1D(int N, double m, double sig, double tmax){
+    FILE *f;
+    f=fopen("brownian1D.txt","w");
+    double epsilon = tmax/(double)(N-1);
+    double dis=0;
     double tab[N];
-    for(int i=0; i<N;i++){
-        tab[i] = gauss(0,1);
-        //printf("%f\n",tab[i]);
+    tab[0] = 0;
+    double X[N];
+    X[0]=0;
+    fprintf(f,"%f %f\n",tab[0],X[0]);
+    for(int i=1; i<N; i++){
+        tab[i] = tab[0] + epsilon * i;
+        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+        fprintf(f,"%f %f\n",tab[i],X[i]);
     }
-    histogram(N,tab,-5,5,100);
+    fclose(f);
+}
+
+double* brownian2D(int N, double m, double sig, double tmax){
+    FILE *f;
+    f=fopen("brownian2D.txt","w");
+    double epsilon = tmax/(double)(N-1);
+    double dis=0;
+    double tab[N];
+    tab[0] = 0;
+    double X[N], Y[N];
+    X[0]=0;
+    Y[0]=0;
+    fprintf(f,"%f %f\n",X[0],Y[0]);
+    for(int i=1; i<N; i++){
+        tab[i] = tab[0] + epsilon * i;
+        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
+        fprintf(f,"%f %f\n",X[i],Y[i]);
+    }
+    fclose(f);
+}
+
+double* brownian3D(int N, double m, double sig, double tmax){
+    FILE *f;
+    f=fopen("brownian3D.txt","w");
+    double epsilon = tmax/(double)(N-1);
+    double dis=0;
+    double tab[N];
+    tab[0] = 0;
+    double X[N], Y[N], Z[N];
+    X[0]=0;
+    Y[0]=0;
+    Z[0]=0;
+    fprintf(f,"%f %f %f\n",X[0],Y[0],Z[0]);
+    for(int i=1; i<N; i++){
+        tab[i] = tab[0] + epsilon * i;
+        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
+        Z[i] = Z[i-1] + convert(0,tab[i]-tab[i-1]);
+        fprintf(f,"%f %f %F\n",X[i],Y[i],Z[i]);
+    }
+    fclose(f);
+}
+
+int main(void) {
+    int N = pow(10,3);
+    srand(time(NULL));
+    //tableaux tab;
+    double tab[N];
+    double Y[N];
+    /*for(int i=0; i<N;i++){
+        tab[i] = brownian1D(Y,0,10,N);
+    }*/
+    brownian3D(N,0,1,100);
+    //histogram(N,Y,50,200,200);
 }
