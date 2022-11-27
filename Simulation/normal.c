@@ -38,6 +38,7 @@ double gauss(){
     return x;
 }
 
+/* convert non-standard normal distribution to standard */
 double convert(double m, double sig){
     return gauss()*sqrtf(sig)+m;
 }
