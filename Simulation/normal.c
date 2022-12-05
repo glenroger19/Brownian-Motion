@@ -81,6 +81,38 @@ double* brownian2D(int N, double m, double sig, double tmax){
     fclose(f);
 }
 
+double* brownian2D_plus(int N, double m, double sig, double tmax){
+    FILE *f;
+    f=fopen("brownian2D_plus.txt","w");
+    double epsilon = tmax/(double)(N-1);
+    double dis=0;
+    double tab[N];
+    tab[0] = 0;
+    double X[N],Y[N],X1[N],Y1[N],X2[N],Y2[N],X3[N],Y3[N];
+    X[0]=0;
+    Y[0]=0;
+    X1[0]=0;
+    Y1[0]=0;
+    X2[0]=0;
+    Y2[0]=0;
+    X3[0]=0;
+    Y3[0]=0;
+    fprintf(f,"%f %f %f %f %f %f %f %f\n",X[0],Y[0],X1[0],Y1[0],X2[0],Y2[0],X3[0],Y3[0]);
+    for(int i=1; i<N; i++){
+        tab[i] = tab[0] + epsilon * i;
+        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
+        X1[i] = X1[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y1[i] = Y1[i-1] + convert(0,tab[i]-tab[i-1]);
+        X2[i] = X2[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y2[i] = Y2[i-1] + convert(0,tab[i]-tab[i-1]);
+        X3[i] = X3[i-1] + convert(0,tab[i]-tab[i-1]);
+        Y3[i] = Y3[i-1] + convert(0,tab[i]-tab[i-1]);
+        fprintf(f,"%f %f %f %f %f %f %f %f\n",X[i],Y[i],X1[i],Y1[i],X2[i],Y2[i],X3[i],Y3[i]);
+    }
+    fclose(f);
+}
+
 double* brownian3D(int N, double m, double sig, double tmax){
     FILE *f;
     f=fopen("brownian3D.txt","w");
@@ -104,14 +136,11 @@ double* brownian3D(int N, double m, double sig, double tmax){
 }
 
 int main(void) {
-    int N = pow(10,3);
+    int N = 9*pow(10,4);
     srand(time(NULL));
     //tableaux tab;
     double tab[N];
     double Y[N];
-    /*for(int i=0; i<N;i++){
-        tab[i] = brownian1D(Y,0,10,N);
-    }*/
-    brownian3D(N,0,1,100);
+    brownian2D_plus(N,0,1,10000000000000);
     //histogram(N,Y,50,200,200);
 }
