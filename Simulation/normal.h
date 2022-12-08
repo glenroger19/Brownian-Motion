@@ -63,44 +63,35 @@ double* brownian1D(int N, double m, double sig, double tmax){
 
 void brownian2D(int N, double m, double sig, double tmax){
     FILE*f1,*f2,*f3,*f4,*f5;
-    f1=fopen("fich1.txt","w");
-    f2=fopen("fich2.txt","w");
-    f3=fopen("fich3.txt","w");
-    f4=fopen("fich4.txt","w");
-    f5=fopen("fich5.txt","w");
+    f1=fopen("fich1.txt","a");
+    f2=fopen("fich2.txt","a");
+    f3=fopen("fich3.txt","a");
+    f4=fopen("fich4.txt","a");
+    f5=fopen("fich5.txt","a");
     double epsilon = tmax/(double)(N-1);
     double dis=0;
     double tab[N];
     tab[0] = 0;
     double X[N], Y[N];
-    X[0]=0;
-    Y[0]=0;
     //fprintf(f1,"%f %f\n",X[0],Y[0]);
     for(int i=0; i<N; i++){
-        /*tab[i] = tab[0] + epsilon * i;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        if(i<11){
-            fprintf(f2,"%f %f\n",X[i],Y[i]);
+        X[0]=0;
+        Y[0]=0;
+        for(int j=0; j<N; j++){
+            tab[j] = tab[0] + (epsilon * j);
+            X[j] = X[j-1] + convert(0,tab[j]-tab[j-1]);
+            Y[j] = Y[j-1] + convert(0,tab[j]-tab[j-1]);
+            if(j==0){
+                fprintf(f1,"%f %f\n",X[j],Y[j]);
+            }
+            if(j==9){
+                fprintf(f2,"%f %f\n",X[j],Y[j]);
+            }
+            if(j==99){
+                fprintf(f3,"%f %f\n",X[j],Y[j]);
+            }
         }
-        else if(i>10 && i<101){
-            fprintf(f3,"%f %f\n",X[i],Y[i]);
-        }*/
-        fprintf(f1,"%f %f\n",X[0],Y[0]);
     }
-    for(int i=0; i<N; i++){
-        tab[i] = tab[0] + (epsilon * i)/(double)10;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f2,"%f %f\n",X[i],Y[i]);
-    }
-    for(int i=0; i<N; i++){
-        tab[i] = tab[0] + epsilon * i;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f3,"%f %f\n",X[i],Y[i]);
-    }
-
     fclose(f1);
     fclose(f2);
     fclose(f3);
