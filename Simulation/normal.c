@@ -6,7 +6,7 @@
 void histogram(int N, double x[N], double xmin, double xmax, int nbin){
     int i,bin;
     FILE *f;
-    f=fopen("brownian.txt","w");
+    f=fopen("test.txt","w");
     double hist[nbin];
     double dx = (xmax-xmin)/nbin;
     // initialisation de l'histogramme a 0
@@ -25,8 +25,8 @@ void histogram(int N, double x[N], double xmin, double xmax, int nbin){
     fclose(f);
 }
 
-double uniform(){
-    double num = (double)rand()/(double)RAND_MAX;
+double uniform(){                                                   
+    double num = rand()/(double)RAND_MAX;
     return num;
 }
 
@@ -43,11 +43,10 @@ double convert(double m, double sig){
     return gauss()*sqrtf(sig)+m;
 }
 
-double* brownian1D(int N, double m, double sig, double tmax){
+double* brownian1D(int N, double m, double tmax){                                   //mouvement brownien en 1D
     FILE *f;
     f=fopen("brownian1D.txt","w");
     double epsilon = tmax/(double)(N-1);
-    double dis=0;
     double tab[N];
     tab[0] = 0;
     double X[N];
@@ -61,91 +60,35 @@ double* brownian1D(int N, double m, double sig, double tmax){
     fclose(f);
 }
 
-void brownian2D(int N, double m, double sig, double tmax){
-    FILE*f1,*f2,*f3,*f4,*f5;
-    f1=fopen("fich1.txt","w");
-    f2=fopen("fich2.txt","w");
-    f3=fopen("fich3.txt","w");
-    f4=fopen("fich4.txt","w");
-    f5=fopen("fich5.txt","w");
+void brownian2D(int N, double m, double tmax){                                      //mouvement brownien en 2D
+    FILE*f1;
+    f1=fopen("brownian2D.txt","w");
     double epsilon = tmax/(double)(N-1);
     double dis=0;
     double tab[N];
     tab[0] = 0;
-    double X[N], Y[N];
+    double X[N], Y[N], dist[N];
     X[0]=0;
     Y[0]=0;
-    //fprintf(f1,"%f %f\n",X[0],Y[0]);
-    for(int i=0; i<N; i++){
-        /*tab[i] = tab[0] + epsilon * i;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        if(i<11){
-            fprintf(f2,"%f %f\n",X[i],Y[i]);
-        }
-        else if(i>10 && i<101){
-            fprintf(f3,"%f %f\n",X[i],Y[i]);
-        }*/
-        fprintf(f1,"%f %f\n",X[0],Y[0]);
-    }
-    for(int i=0; i<N; i++){
-        tab[i] = tab[0] + (epsilon * i)/(double)10;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f2,"%f %f\n",X[i],Y[i]);
-    }
-    for(int i=0; i<N; i++){
-        tab[i] = tab[0] + epsilon * i;
-        X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f3,"%f %f\n",X[i],Y[i]);
-    }
-
-    fclose(f1);
-    fclose(f2);
-    fclose(f3);
-}
-
-double* brownian2D_plus(int N, double m, double sig, double tmax){
-    FILE *f;
-    f=fopen("brownian2D_plus.txt","w");
-    double epsilon = tmax/(double)(N-1);
-    double dis=0;
-    double tab[N];
-    tab[0] = 0;
-    double X[N],Y[N],X1[N],Y1[N],X2[N],Y2[N],X3[N],Y3[N];
-    X[0]=0;
-    Y[0]=0;
-    X1[0]=0;
-    Y1[0]=0;
-    X2[0]=0;
-    Y2[0]=0;
-    X3[0]=0;
-    Y3[0]=0;
-    fprintf(f,"%f %f %f %f %f %f %f %f\n",X[0],Y[0],X1[0],Y1[0],X2[0],Y2[0],X3[0],Y3[0]);
+    dist[0]=0;
+    double dis_moy = 0;
+    fprintf(f1,"%f %f %f\n",X[0],Y[0],dist[0]);
     for(int i=1; i<N; i++){
         tab[i] = tab[0] + epsilon * i;
         X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
         Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
-        X1[i] = X1[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y1[i] = Y1[i-1] + convert(0,tab[i]-tab[i-1]);
-        X2[i] = X2[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y2[i] = Y2[i-1] + convert(0,tab[i]-tab[i-1]);
-        X3[i] = X3[i-1] + convert(0,tab[i]-tab[i-1]);
-        Y3[i] = Y3[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f,"%f %f %f %f %f %f %f %f\n",X[i],Y[i],X1[i],Y1[i],X2[i],Y2[i],X3[i],Y3[i]);
+        dist[i] = sqrt(pow(X[i]-X[i-1],2)+pow(Y[i]-Y[i-1],2));
+        fprintf(f1,"%f %f %f\n",X[i],Y[i],dist[i]);
     }
-    fclose(f);
+    fclose(f1);
 }
 
-double* brownian3D(int N, double m, double sig, double tmax){
+double* brownian3D(int N, double m, double tmax){                                   //mouvement brownien en 3D
     FILE *f;
     f=fopen("brownian3D.txt","w");
     double epsilon = tmax/(double)(N-1);
-    double dis=0;
-    double tab[N];
+    double tab[N], X[N], Y[N], Z[N];
     tab[0] = 0;
-    double X[N], Y[N], Z[N];
     X[0]=0;
     Y[0]=0;
     Z[0]=0;
@@ -155,17 +98,92 @@ double* brownian3D(int N, double m, double sig, double tmax){
         X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
         Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
         Z[i] = Z[i-1] + convert(0,tab[i]-tab[i-1]);
-        fprintf(f,"%f %f %F\n",X[i],Y[i],Z[i]);
+        fprintf(f,"%f %f %f\n",X[i],Y[i],Z[i]);
     }
     fclose(f);
 }
 
-/*int main(void) {
-    int N = 9*pow(10,4);
-    srand(time(NULL));
-    //tableaux tab;
+double ink(int N, double m, double tmax, int fois){
+    FILE* t0=fopen("t0.txt","w");                                                   //création d'un fichier à t=0
+    FILE* t10=fopen("t10.txt","w");                                                 //création d'un fichier à t=10
+    FILE* t100=fopen("t100.txt","w");                                               //création d'un fichier à t=100                                
+    double epsilon = tmax/(double)(N-1);
     double tab[N];
-    double Y[N];
-    brownian2D_plus(N,0,1,10000000000000);
-    //histogram(N,Y,50,200,200);
-}*/
+    double X[N], Y[N], distance[N];
+    double dist = 0;
+    double q = 0;
+    for(int j=0; j<fois; j++){
+        X[0]=0;                                                                     //condition initiale sur x
+        Y[0]=0;                                                                     //condition initiale sur y
+        tab[0] = 0;
+        distance[0]=0;                                                              //condition initiale sur la distance
+        fprintf(t0,"%f %f\n",X[0],Y[0]);
+        for(int i=1; i<N+1; i++){
+            tab[i] = tab[0] + epsilon * i;
+            X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+            Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
+            distance[i] = sqrt(pow(X[i]-X[i-1],2)+pow(Y[i]-Y[i-1],2));              //calcule la distance de la particule i par rapport sa position précédente
+            q += pow(distance[i]-distance[i-1],2);                                  //numérateur de la distance quadratique moyenne
+        }
+        fprintf(t10,"%f %f\n",X[10],Y[10]);
+        fprintf(t100,"%f %f\n",X[100],Y[100]);
+        dist += sqrt(pow(X[N]-X[0],2)+pow(Y[N]-Y[0],2));                            //somme de la distance de la dernière particule par rapport à sa position initiale
+    }
+    fclose(t0);
+    fclose(t10);
+    fclose(t100);
+    printf("%f\n",dist/fois);                                                       //affiche la distance moyenne 
+    printf("%f\n",q/fois);                                                          //affiche la distance quadratique moyenne
+    return q/fois;
+}
+
+double echappement(int N, double rayon, int tmax, int fois){
+    double epsilon = tmax/(double)(N-1);
+    double tab[N], X[N], Y[N], Z[N];                                                //on se place en 3D avec x,y,z
+    tab[0] = 0;
+    X[0]=0;
+    Y[0]=0;
+    Z[0]=0;
+    double p_ext = 0;
+    double p_tot = 0;
+    double distance = 0;
+    for(int j=1; j<fois+1; j++){                                                    //on a ici 1000 particules
+        for(int i=1; i<N+1; i++){                                                   
+            tab[i] = tab[0] + epsilon * i;
+            X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
+            Y[i] = Y[i-1] + convert(0,tab[i]-tab[i-1]);
+            Z[i] = Z[i-1] + convert(0,tab[i]-tab[i-1]);
+        }
+        distance = sqrt(pow(X[N]-X[0],2)+pow(Y[N]-Y[0],2)+pow(Z[N]-Z[0],2));        //calcule de la distance après N-itérations
+        if(distance>rayon){                                                         //regarde si la particule est à l'extérieure du sphère
+            p_ext++;                                                                //compte le nombre de particule à l'extérieur
+        }
+    }
+    return p_ext/(double)fois;
+}
+
+void plot_echap(int N, double rayon){                                               //calcule de la probabilité pour différents rayon
+    FILE* fich = fopen("echappement.txt","w");
+    double p_ext = 0;
+    for(int i=1;i<rayon+1;i++){
+        p_ext = echappement(N,i,100,1000);
+        fprintf(fich,"%i %f\n",i,p_ext);
+    }
+    fclose(fich);  
+}
+
+int main(){
+    int N = pow(10,3);
+    srand(time(NULL));
+    double tab[N];
+    for(int i=0; i<N; i++){                                                         /* affichage d'une courbe gaussienne */
+        tab[i] = convert(0,1);
+    }
+    histogram(N,tab,-5,5,100);                                                      /* fin d'affichage */
+    brownian1D(N,0,100);
+    brownian2D(N,0,100);
+    brownian3D(N,0,100);
+    ink(N,0,100,100);
+    echappement(N,10,100,10000);
+    plot_echap(N,100);
+}
