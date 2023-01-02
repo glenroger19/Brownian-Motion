@@ -43,17 +43,10 @@ double convert(double m, double sig){
     return gauss()*sqrtf(sig)+m;
 }
 
-<<<<<<< Updated upstream
 double* brownian1D(int N, double m, double tmax){                                   //mouvement brownien en 1D
     FILE *f;
     f=fopen("brownian1D.txt","w");
     double epsilon = tmax/(double)(N-1);
-=======
-double* brownian1D(int N, double m, double tmax){
-    FILE *f;
-    f=fopen("brownian1D.txt","w");                      //écriture dans un fichier
-    double epsilon = tmax/(double)(N-1);                //pas de temps
->>>>>>> Stashed changes
     double tab[N];
     tab[0] = 0;                                         //initialise le temps à t=0
     double X[N];
@@ -67,31 +60,18 @@ double* brownian1D(int N, double m, double tmax){
     fclose(f);
 }
 
-<<<<<<< Updated upstream
 void brownian2D(int N, double m, double tmax){                                      //mouvement brownien en 2D
     FILE*f1;
     f1=fopen("brownian2D.txt","w");
-=======
-double* brownian2D(int N, double m, double tmax){
-    FILE *f;
-    f=fopen("brownian2D.txt","w");
->>>>>>> Stashed changes
     double epsilon = tmax/(double)(N-1);
     double tab[N];
     tab[0] = 0;
-<<<<<<< Updated upstream
     double X[N], Y[N], dist[N];
     X[0]=0;
     Y[0]=0;
     dist[0]=0;
     double dis_moy = 0;
     fprintf(f1,"%f %f %f\n",X[0],Y[0],dist[0]);
-=======
-    double X[N], Y[N];
-    X[0]=0;                                             //condition initiale sur x
-    Y[0]=0;                                             //condition initiale sur y
-    fprintf(f,"%f %f\n",X[0],Y[0]);
->>>>>>> Stashed changes
     for(int i=1; i<N; i++){
         tab[i] = tab[0] + epsilon * i;
         X[i] = X[i-1] + convert(0,tab[i]-tab[i-1]);
@@ -102,7 +82,6 @@ double* brownian2D(int N, double m, double tmax){
     fclose(f1);
 }
 
-<<<<<<< Updated upstream
 double* brownian3D(int N, double m, double tmax){                                   //mouvement brownien en 3D
     FILE *f;
     f=fopen("brownian3D.txt","w");
@@ -112,18 +91,6 @@ double* brownian3D(int N, double m, double tmax){                               
     X[0]=0;
     Y[0]=0;
     Z[0]=0;
-=======
-double* brownian3D(int N, double m, double tmax){
-    FILE *f;
-    f=fopen("brownian3D.txt","w");
-    double epsilon = tmax/(double)(N-1);
-    double tab[N];
-    tab[0] = 0;
-    double X[N], Y[N], Z[N];
-    X[0]=0;                                             //condition initiale sur x
-    Y[0]=0;                                             //condition initiale sur y
-    Z[0]=0;                                             //condition initiale sur z
->>>>>>> Stashed changes
     fprintf(f,"%f %f %f\n",X[0],Y[0],Z[0]);
     for(int i=1; i<N; i++){
         tab[i] = tab[0] + epsilon * i;
@@ -207,15 +174,15 @@ void plot_echap(int N, double rayon){                                           
 int main(){
     int N = pow(10,3);
     srand(time(NULL));
-    double tab[N];
-    for(int i=0; i<N; i++){                                                         /* affichage d'une courbe gaussienne */
+    /*double tab[N];
+    for(int i=0; i<N; i++){                                                         //affichage d'une courbe gaussienne
         tab[i] = convert(0,1);
     }
-    histogram(N,tab,-5,5,100);                                                      /* fin d'affichage */
+    histogram(N,tab,-5,5,100);                                                      //fin d'affichage
     brownian1D(N,0,100);
     brownian2D(N,0,100);
-    brownian3D(N,0,100);
+    brownian3D(N,0,100);*/
     ink(N,0,100,100);
-    echappement(N,10,100,10000);
-    plot_echap(N,100);
+    /*echappement(N,10,100,10000);
+    plot_echap(N,100);*/
 }
